@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
-from imdbproject.users.api.views import EmailTokenObtainPairView, RegisterView
+from imdbproject.users.views import EmailTokenObtainPairView, RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

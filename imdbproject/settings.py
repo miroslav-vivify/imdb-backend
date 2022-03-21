@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'imdbproject.imdbapp.apps.ImdbappConfig',
     'rest_framework_simplejwt',
     'corsheaders',
     'imdbproject.users.apps.UsersConfig',
