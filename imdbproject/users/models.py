@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.hashers import make_password
 
 class CustomUserManager(BaseUserManager):
 
@@ -11,7 +12,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('The name must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, name=name, **extra_fields)
-        user.set_password(password)
+        user.password = make_password(password)
         user.save()
         return user
 
