@@ -8,6 +8,11 @@ class MovieListCreate(generics.ListCreateAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     
-class MoviesListShow(generics.ListCreateAPIView):
-    queryset = Movie.objects.all()
+class MoviesListShow(generics.ListAPIView):
     serializer_class = MovieSerializer
+    queryset = Movie.objects.all()
+
+    def get(self, request):
+        return self.list(request)
+
+    
