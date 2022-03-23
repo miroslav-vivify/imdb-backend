@@ -21,13 +21,13 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 from imdbproject.users.views import EmailTokenObtainPairView, RegisterView
-from imdbproject.movies.views import MoviesListView, MovieCreateView
+from imdbproject.movies.views import MovieListView, MovieCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', RegisterView.as_view(), name='token_obtain_pair'),
     path('login/', EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('movies/', MoviesListView.as_view(), name="movie_list"),
+    path('movies/', MovieListView.as_view(), name='movie_list'),
     path('movies/create/', MovieCreateView.as_view(), name='movie_create'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
