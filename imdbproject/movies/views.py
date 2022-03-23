@@ -3,10 +3,11 @@ from rest_framework import generics
 from .models import Movie
 from imdbproject.movies.serializers import MovieSerializer
 
-
-class MovieListCreate(generics.ListCreateAPIView):
-    queryset = Movie.objects.all()
+class MovieListCreate(generics.CreateAPIView):
     serializer_class = MovieSerializer
+
+    def post(self, request):
+        return self.create(request)
     
 class MoviesListShow(generics.ListAPIView):
     serializer_class = MovieSerializer
@@ -15,4 +16,3 @@ class MoviesListShow(generics.ListAPIView):
     def get(self, request):
         return self.list(request)
 
-    
