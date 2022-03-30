@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
@@ -21,10 +22,11 @@ from rest_framework_simplejwt.views import (
 )
 from imdbproject.users.views import EmailTokenObtainPairView, RegisterView
 from rest_framework import routers
-from imdbproject.movies.views import MovieViewSet
+from imdbproject.movies.views import MovieViewSet, GenreViewset
 
 router = routers.DefaultRouter()
 router.register(r'api/movies', MovieViewSet)
+router.register(r'api/genres', GenreViewset)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
