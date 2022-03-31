@@ -2,6 +2,7 @@ from rest_framework import serializers
 from imdbproject.movies.models import Movie, Genre
 
 class GenreSerializer(serializers.ModelSerializer):
+
     id = serializers.ModelField(model_field=Genre()._meta.get_field('id'))
     class Meta:
         model = Genre
@@ -9,7 +10,6 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
-
 
     def create(self, validated_data):
         

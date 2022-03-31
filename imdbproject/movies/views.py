@@ -17,7 +17,7 @@ class MovieViewSet(viewsets.ModelViewSet):
             return Response(new_movie._errors, 400)
         new_movie.save()   
 
-        return Response(None, 200)
+        return Response(movie_data, 200)
 
 class GenreViewset(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
