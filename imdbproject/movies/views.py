@@ -4,12 +4,16 @@ from imdbproject.movies.serializers import MovieSerializer, GenreSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
 from imdbproject.movies.moviesPagination import MoviesListPagination
+from rest_framework import filters
 
 
 
 class MovieViewSet(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
     pagination_class = MoviesListPagination
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
     
     queryset = Movie.objects.all() 
 
@@ -26,4 +30,3 @@ class MovieViewSet(viewsets.ModelViewSet):
 class GenreViewset(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    
