@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'imdbproject.users.apps.UsersConfig',
     'imdbproject.movies.apps.MoviesConfig',
+    'django_filters'
 
 ]
 
@@ -63,6 +64,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'imdbproject.movies.moviesPagination.MoviesListPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 SIMPLE_JWT = {

@@ -5,16 +5,17 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from imdbproject.movies.moviesPagination import MoviesListPagination
 from rest_framework import filters
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class MovieViewSet(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
     pagination_class = MoviesListPagination
 
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['title']
-    
+    filterset_fields = ['genre']
+
     queryset = Movie.objects.all() 
 
     def create(self, request):
