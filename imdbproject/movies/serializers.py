@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from imdbproject.movies.models import Movie, Genre
+from imdbproject.movies.models import Movie, Genre, Reaction
 
 class GenreSerializer(serializers.ModelSerializer):
 
@@ -10,6 +10,9 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
+    likes = serializers.IntegerField(read_only=True, default=0)
+    dislikes = serializers.IntegerField(read_only=True, default=0)
+    has_reaction = serializers.IntegerField(read_only=True, default=0)
 
     def create(self, validated_data):
         
@@ -20,8 +23,7 @@ class MovieSerializer(serializers.ModelSerializer):
         for genre in genres_data:
             movie_genre_ids.append(genre['id'])
 
-        # print(movie_genre_ids)
-
+    
         movie_genres = Genre.objects.filter(
            pk__in=movie_genre_ids
         )
@@ -29,10 +31,15 @@ class MovieSerializer(serializers.ModelSerializer):
         for g in movie_genres:
             movie.genre.add(g)
 
-        #movie.genre.add(*[movie_genres])
         return movie
 
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'description', 'image_url', 'genre', 'num_of_views']
+        fields = ['id', 'title', 'description', 'image_url', 'genre', 'num_of_views', 'likes', 'dislikes','has_reaction']
+
+
+class AddReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reaction
+        fields = ['like']
