@@ -16,7 +16,6 @@ from rest_framework.decorators import action
 class MovieViewSet(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
     pagination_class = MoviesListPagination
-    
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['title']
     filterset_fields = ['genre']
@@ -27,7 +26,7 @@ class MovieViewSet(viewsets.ModelViewSet):
         return Movie.objects.annotate(
             likes=Coalesce(Count('movie_likes__like', filter=Q(movie_likes__like=Like.LIKE)), 0),
             dislikes=Coalesce(Count('movie_likes__like', filter=Q(movie_likes__like=Like.DISLIKE)), 0),
-            liked_or_disliked_user=Coalesce(Count('movie_likes__like', filter=Q(movie_likes__user=self.request.user.id)), 0)
+            has_reaction=Coalesce(Count('movie_likes__like', filter=Q(movie_likes__user=self.request.user.id)), 0)
         ).order_by('id')
 
     def create(self, request):
