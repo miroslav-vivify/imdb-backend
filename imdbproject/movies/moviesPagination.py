@@ -14,3 +14,7 @@ class MoviesListPagination(PageNumberPagination):
             'results': data,
             'currentPage': self.page.number
     })
+
+class CommentListPagination(PageNumberPagination):
+    page_size = 3
+    

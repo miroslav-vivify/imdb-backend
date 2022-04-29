@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from imdbproject.movies.models import Movie, Genre, Reaction
+from imdbproject.movies.models import Movie, Genre, Reaction, Comment
 
 class GenreSerializer(serializers.ModelSerializer):
 
@@ -43,3 +43,15 @@ class AddReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reaction
         fields = ['like']
+
+class AddCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['content']
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'content', 'user', 'created_at']

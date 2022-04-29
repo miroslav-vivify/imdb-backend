@@ -1,21 +1,23 @@
 from django.shortcuts import render
-from .models import Like, Movie, Genre, Reaction
-from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer
+from .models import Like, Movie, Genre, Reaction, Comment
+from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer, CommentSerializer, AddCommentSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
-from imdbproject.movies.moviesPagination import MoviesListPagination
+from imdbproject.movies.moviesPagination import MoviesListPagination, CommentListPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from django.db.models import Q, Count, Sum
 from django.db.models.functions import Coalesce
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_201_CREATED
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 
 class MovieViewSet(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
     pagination_class = MoviesListPagination
+    Permission_class=[IsAuthenticated]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['title']
     filterset_fields = ['genre']
@@ -67,3 +69,19 @@ class MovieViewSet(viewsets.ModelViewSet):
 class GenreViewset(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+
+    serializer_class = CommentSerializer
+    pagination_class = CommentListPagination
+
+    def get_queryset(self):
+        return Comment.objects.filter(movie=self.kwargs['movie_pk']).order_by('-created_at')
+        
+    def create(self, request, movie_pk):
+        serializer = AddCommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        movie_comment = Comment.objects.create(**serializer.data, movie_id=movie_pk, user=request.user)
+        response_serializer = self.get_serializer(movie_comment)
+        return Response(response_serializer.data, status=HTTP_201_CREATED)

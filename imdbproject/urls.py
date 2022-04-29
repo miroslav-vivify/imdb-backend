@@ -21,18 +21,26 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from imdbproject.users.views import EmailTokenObtainPairView, RegisterView
-from rest_framework import routers
-from imdbproject.movies.views import MovieViewSet, GenreViewset
+from imdbproject.movies.views import CommentViewSet, MovieViewSet, GenreViewset
+from rest_framework_nested import routers
 
-router = routers.DefaultRouter()
-router.register(r'api/movies', MovieViewSet)
-router.register(r'api/genres', GenreViewset)
+router_movie = routers.DefaultRouter()
+router_movie.register(r'api/movies', MovieViewSet, basename='movie')
+
+router_comment = routers.NestedSimpleRouter(router_movie, r'api/movies', lookup='movie')
+router_comment.register(r'comments', CommentViewSet, basename='comments')
+
+router_genres = routers.SimpleRouter()
+router_genres.register(r'api/genres', GenreViewset, basename='genre')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', RegisterView.as_view(), name='token_obtain_pair'),
     path('login/', EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('', include(router_movie.urls)),
+    path('', include(router_comment.urls)),
+    path('', include(router_genres.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
