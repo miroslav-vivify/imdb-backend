@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from imdbproject.users.views import EmailTokenObtainPairView, RegisterView
-from imdbproject.movies.views import CommentViewSet, MovieViewSet, GenreViewset
+from imdbproject.movies.views import CommentViewSet, MovieViewSet, GenreViewset, PopularMovieViewSet
 from rest_framework_nested import routers
 
 router_movie = routers.DefaultRouter()
@@ -33,6 +33,9 @@ router_comment.register(r'comments', CommentViewSet, basename='comments')
 router_genres = routers.SimpleRouter()
 router_genres.register(r'api/genres', GenreViewset, basename='genre')
 
+router_popular_movies = routers.SimpleRouter()
+router_popular_movies.register(r'api/popular', PopularMovieViewSet, basename='popular')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +44,7 @@ urlpatterns = [
     path('', include(router_movie.urls)),
     path('', include(router_comment.urls)),
     path('', include(router_genres.urls)),
+    path('', include(router_popular_movies.urls)), 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
