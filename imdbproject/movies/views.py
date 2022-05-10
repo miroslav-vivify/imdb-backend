@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Like, Movie, Genre, Reaction, Comment
-from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer, CommentSerializer, AddCommentSerializer, PopularMovieSerializer
+from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer, CommentSerializer, AddCommentSerializer, PopularMovieSerializer, RelatedSerializes
 from rest_framework import viewsets
 from rest_framework.response import Response
 from imdbproject.movies.moviesPagination import MoviesListPagination, CommentListPagination
@@ -65,11 +65,16 @@ class MovieViewSet(viewsets.ModelViewSet):
         movie_likes.delete()
         return Response(status=HTTP_204_NO_CONTENT)
 
+    @action(detail=True, url_path='related') 
+    def related(self, request, pk):
+        movie = self.get_object()          
+        queryset = Movie.objects.filter(genre=movie.genre).exclude(pk=pk)[:10]
+        response_serializer = RelatedSerializes(queryset, many=True)
+        return Response(response_serializer.data, status=HTTP_200_OK)
 
 class GenreViewset(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-
 
 class CommentViewSet(viewsets.ModelViewSet):
 
