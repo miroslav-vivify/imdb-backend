@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.db.models.signals import post_save
 
 User = get_user_model()
 
@@ -22,6 +24,20 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+def movie_post_save(sender, instance, created, *args, **kwargs):
+    if created:
+        send_mail(
+            'A new movie is added to the system.: {}'.format(instance.title),
+            'Title: {}\nDescription: {}'.format(
+                instance.title, instance.description),
+            'from@example.com',
+            ['miroslav.cvijanovic@vivifyideas.com'],
+            fail_silently=False,
+        )
+        
+post_save.connect(movie_post_save, sender=Movie)
+
 
 class Reaction(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_likes')
