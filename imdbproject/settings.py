@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'imdbproject.users.apps.UsersConfig',
     'imdbproject.movies.apps.MoviesConfig',
-    'django_filters'
-
+    'django_filters',
+    'imdbproject.django_celery_results',
 ]
 
 
@@ -154,3 +154,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_PORT = '2525'
+EMAIL_HOST_USER = '0d4b073c208072'
+EMAIL_HOST_PASSWORD = 'bfcfbc103b992a'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
