@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'imdbproject.users.apps.UsersConfig',
     'imdbproject.movies.apps.MoviesConfig',
     'django_filters',
-    'imdbproject.django_celery_results',
+    'django_celery_results',
+    'easy_thumbnails',
 ]
 
 
@@ -169,3 +170,14 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH=191
+
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+STATIC_URL = 'static/'
