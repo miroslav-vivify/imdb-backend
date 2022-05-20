@@ -66,7 +66,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     @action(detail=True, url_path='related') 
     def related(self, request, pk):
         movie = self.get_object()          
-        queryset = Movie.objects.filter(genre=movie.id).exclude(pk=pk)[:10]
+        queryset = Movie.objects.filter(genre=movie.genre).exclude(pk=pk)[:10]
         response_serializer = RelatedSerializes(queryset, many=True)
         return Response(response_serializer.data, status=HTTP_200_OK)
 
