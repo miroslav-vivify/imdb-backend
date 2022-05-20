@@ -6,7 +6,7 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 User = get_user_model()
 
-class MovieImages(models.Model):
+class MovieImage(models.Model):
     thumbnail = ThumbnailerImageField(
         upload_to='static/thumbnails/', blank=True, null=True, resize_source=dict(size=(200, 200)))
     full_size = ThumbnailerImageField(
@@ -25,7 +25,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=500)
-    image_url = models.OneToOneField(MovieImages, on_delete=models.CASCADE, blank=True, null=True)
+    image_url = models.OneToOneField(MovieImage, on_delete=models.CASCADE, blank=True, null=True)
     genre = models.ManyToManyField(Genre)
     num_of_views = models.IntegerField(default=0)
 

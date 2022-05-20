@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Like, Movie, Genre, Reaction, Comment, MovieImages
+from .models import Like, Movie, Genre, Reaction, Comment, MovieImage
 from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer, CommentSerializer, AddCommentSerializer, PopularMovieSerializer, RelatedSerializes
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -34,7 +34,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = MovieSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        image = MovieImages.objects.create(thumbnail=request.FILES.get('image_url'), full_size=request.FILES.get('image_url'))
+        image = MovieImage.objects.create(thumbnail=request.FILES.get('image_url'), full_size=request.FILES.get('image_url'))
         movie = Movie.objects.create(**serializer.data, image_url=image)
         response_serializer = self.get_serializer(movie)
         return Response(response_serializer.data, status=HTTP_201_CREATED)
@@ -66,7 +66,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     @action(detail=True, url_path='related') 
     def related(self, request, pk):
         movie = self.get_object()          
-        queryset = Movie.objects.filter(genre=movie.genre).exclude(pk=pk)[:10]
+        queryset = Movie.objects.filter(genre=movie.id).exclude(pk=pk)[:10]
         response_serializer = RelatedSerializes(queryset, many=True)
         return Response(response_serializer.data, status=HTTP_200_OK)
 
