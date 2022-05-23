@@ -13,33 +13,22 @@ class MovieSerializer(serializers.ModelSerializer):
     likes = serializers.IntegerField(read_only=True, default=0)
     dislikes = serializers.IntegerField(read_only=True, default=0)
     has_reaction = serializers.IntegerField(read_only=True, default=0)
+    thumbnail = serializers.SerializerMethodField()
+    full_size = serializers.SerializerMethodField()
 
-    def create(self, validated_data):
-        
-        genres_data = validated_data.pop('genre', [])
+    def get_thumbnail(self, obj):
+        return obj.image_url.thumbnail.url if obj.image_url is not None else False
 
-        movie = super(MovieSerializer, self).create(validated_data)
-        movie_genre_ids = []        
-        for genre in genres_data:
-            movie_genre_ids.append(genre['id'])
-
-    
-        movie_genres = Genre.objects.filter(
-           pk__in=movie_genre_ids
-        )
-
-        for g in movie_genres:
-            movie.genre.add(g)
-
-        return movie
-
+    def get_full_size(self, obj):
+        return obj.image_url.full_size.url if obj.image_url is not None else False
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'description', 'image_url', 'genre', 'num_of_views', 'likes', 'dislikes','has_reaction']
+        fields = ['id', 'title', 'description', 'genre', 'image_url', 'num_of_views', 'likes', 'dislikes','has_reaction', 'thumbnail', 'full_size']
 
 
 class AddReactionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Reaction
         fields = ['like']

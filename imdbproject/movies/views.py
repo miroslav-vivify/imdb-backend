@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Like, Movie, Genre, Reaction, Comment
+from .models import Like, Movie, Genre, Reaction, Comment, MovieImage
 from imdbproject.movies.serializers import MovieSerializer, GenreSerializer, AddReactionSerializer, CommentSerializer, AddCommentSerializer, PopularMovieSerializer, RelatedSerializes
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -32,15 +32,13 @@ class MovieViewSet(viewsets.ModelViewSet):
         ).order_by('id')
 
     def create(self, request):
-        movie_data = request.data
-
-        new_movie = MovieSerializer(data=movie_data)
-        if not new_movie.is_valid():
-            return Response(new_movie._errors, 400)
-        new_movie.save()   
-
-        return Response(None, 200)  
-
+        serializer = MovieSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        image = MovieImage.objects.create(thumbnail=request.FILES.get('image_url'), full_size=request.FILES.get('image_url'))
+        movie = Movie.objects.create(**serializer.data, image_url=image)
+        response_serializer = self.get_serializer(movie)
+        return Response(response_serializer.data, status=HTTP_201_CREATED)
+        
     def retrieve(self, request, pk):
         instance = self.get_object()
         instance.num_of_views += 1

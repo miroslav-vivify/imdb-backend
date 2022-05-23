@@ -2,8 +2,15 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from .tasks import send_mail_celery
+from easy_thumbnails.fields import ThumbnailerImageField
 
 User = get_user_model()
+
+class MovieImage(models.Model):
+    thumbnail = ThumbnailerImageField(
+        upload_to='static/thumbnails/', blank=True, null=True, resize_source=dict(size=(200, 200)))
+    full_size = ThumbnailerImageField(
+        upload_to='static/full-size/', blank=True, null=True, resize_source=dict(size=(400, 400)))
 
 class Like(models.IntegerChoices):
     LIKE = 1
@@ -18,7 +25,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=500)
-    image_url = models.TextField()
+    image_url = models.OneToOneField(MovieImage, on_delete=models.CASCADE, blank=True, null=True)
     genre = models.ManyToManyField(Genre)
     num_of_views = models.IntegerField(default=0)
 
