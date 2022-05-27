@@ -1,18 +1,18 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from .serializers import CreateUserSerializer, UserSerializer
+from imdbproject.movies.views import MovieViewSet
+from .serializers import CreateUserSerializer, MovieWatchlistSerializer, UserSerializer, TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializer, TokenObtainPairSerializer
+from imdbproject.movies.models import MovieWatchList
 
 User = get_user_model()
 
-class UserViewSet(mixins.CreateModelMixin,
-                viewsets.GenericViewSet):
+class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -28,8 +28,8 @@ class UserViewSet(mixins.CreateModelMixin,
         User.objects.create_user(**serializer.data)
         return Response(status=HTTP_201_CREATED)
 
-    @action(detail=False, url_path='me', permission_classes=[IsAuthenticated]) 
-    def get_current_user(self, request):          
+    @action(detail=False, url_path='me', permission_classes=[IsAuthenticated])
+    def get_current_user(self, request):
         response_serializer = UserSerializer(request.user)
         return Response(response_serializer.data, HTTP_200_OK)
 
@@ -43,6 +43,12 @@ class RegisterView(APIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST, data={'errors': serializer.errors})
 
-
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
+
+class WatchlistViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [IsAuthenticated, ]
+    pagination_class = None
+    queryset = MovieWatchList.objects.all()
+    serializer_class = MovieWatchlistSerializer 

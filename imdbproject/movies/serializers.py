@@ -26,6 +26,10 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = ['id', 'title', 'description', 'genre', 'image_url', 'num_of_views', 'likes', 'dislikes','has_reaction', 'thumbnail', 'full_size']
 
+class BasicMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ['id', 'title', 'description', 'image_url', 'genre']
 
 class AddReactionSerializer(serializers.ModelSerializer):
 
