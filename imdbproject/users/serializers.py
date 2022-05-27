@@ -26,7 +26,7 @@ class MovieWatchlistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieWatchList
-        fields = ['id', 'movie', 'is_watched', 'user', ]
+        fields = ['id', 'movie', 'is_watched', 'user']
 
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +40,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['id', 'email', 'name', 'user_watchlist', ]
+        fields = ['id', 'email', 'name', 'user_watchlist']
