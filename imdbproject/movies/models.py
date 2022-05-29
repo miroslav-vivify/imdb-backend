@@ -59,3 +59,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.movie} | {self.user}'
+
+class MovieWatchList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_watchlist')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_watchlist')
+    is_watched = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'movie')
