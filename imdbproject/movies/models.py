@@ -1,8 +1,14 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from .tasks import send_mail_celery
 from easy_thumbnails.fields import ThumbnailerImageField
+import json
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.forms.models import model_to_dict
+from django.dispatch import receiver
+
 
 User = get_user_model()
 
@@ -38,6 +44,35 @@ def movie_post_save(sender, instance, created, *args, **kwargs):
             {'title': instance.title, 'description': instance.description})
         
 post_save.connect(movie_post_save, sender=Movie)
+
+
+# @receiver(post_save, sender=Comments)
+# def notify_new_post(sender, instance, created, **kwargs):
+#     if created:
+#         channel_layer = get_channel_layer()
+#         data = model_to_dict(instance)
+#         data['type'] = 'new_comment'
+#         async_to_sync(channel_layer.group_send)(
+#             f"{instance.movie.id}",
+#             {
+#                 "type": "new.comment",
+#                 "data": json.dumps(data)
+#             }
+#         )
+
+# @receiver(post_save, sender=Reactions)
+# def notify_new_post(sender, instance, created, **kwargs):
+#     if created:
+#         channel_layer = get_channel_layer()
+#         data = model_to_dict(instance)
+#         data['type'] = 'new_reaction'
+#         async_to_sync(channel_layer.group_send)(
+#             f"{instance.movie.id}",
+#             {
+#                 "type": "new.reaction",
+#                 "data": json.dumps(data)
+#             }
+#         )
 
 
 class Reaction(models.Model):
