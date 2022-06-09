@@ -7,18 +7,10 @@ import easy_thumbnails.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('movies', '0002_comment'),
+        ('movies', '0003_movieimages_alter_movie_image_url'),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='MovieImages',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('thumbnail', easy_thumbnails.fields.ThumbnailerImageField(blank=True, null=True, upload_to='static/thumbnails/')),
-                ('full_size', easy_thumbnails.fields.ThumbnailerImageField(blank=True, null=True, upload_to='static/full-size/')),
-            ],
-        ),
         migrations.RemoveField(
             model_name='movie',
             name='image_url',
